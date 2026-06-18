@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Av. Juan Chabas 6</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Sans+3:wght@400;600&display=swap');
+
+  :root {
+    --cream: #F2E8D0;
+    --cream-dark: #E8D8B8;
+    --red: #B03030;
+    --red-light: #D85050;
+    --red-dark: #7A1E1E;
+    --teal: #2E7A88;
+    --teal-light: #4A9AA8;
+    --teal-dark: #1A5560;
+    --gold: #C08818;
+    --gold-light: #E0A830;
+    --gold-dark: #8A6010;
+    --rose: #B85070;
+    --rose-light: #D87090;
+    --green: #3A6A4A;
+    --green-light: #5A8A6A;
+    --ink: #1A1008;
+    --ink-light: #3A2818;
+    --outline: 2.5px solid #1A1008;
+    --outline-thin: 1.5px solid #1A1008;
+    --radius: 4px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(26,16,8,0.04) 39px, rgba(26,16,8,0.04) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(26,16,8,0.04) 39px, rgba(26,16,8,0.04) 40px);
+  }
+
+  header {
+    background: var(--red-dark);
+    border-bottom: 3px solid var(--ink);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo-block {
+    background: var(--cream);
+    border: var(--outline);
+    padding: 6px 12px;
+    transform: rotate(-1deg);
+  }
+
+  .logo-small {
+    font-size: 9px;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .logo-big {
+    font-family: 'Oswald', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+
+  .header-subtitle {
+    font-family: 'Oswald', sans-serif;
+    color: var(--cream);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  nav {
+    display: flex;
+    gap: 0;
+    background: var(--cream-dark);
+    border-bottom: var(--outline);
+    overflow-x: auto;
+  }
+
+  nav button {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-right: var(--outline-thin);
+    cursor: pointer;
+    color: var(--ink-light);
+    white-space: nowrap;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  nav button.active {
+    background: var(--red);
+    color: var(--cream);
+  }
+
+  nav button:hover:not(.active) {
+    background: var(--cream);
+  }
+
+  .section { display: none; padding: 20px; max-width: 900px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  .section-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: var(--outline);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title span {
+    background: var(--red);
+    color: var(--cream);
+    font-size: 13px;
+    padding: 2px 8px;
+    letter-spacing: 1px;
+  }
+
+  .card {
+    background: var(--cream);
+    border: var(--outline);
+    padding: 16px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px; right: -3px; bottom: -3px;
+    background: var(--ink);
+    z-index: -1;
+  }
+
+  .card-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .badge {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border: 1.5px solid currentColor;
+  }
+
+  .badge-ok { color: var(--green); border-color: var(--green); background: #e8f4ec; }
+  .badge-warn { color: var(--gold-dark); border-color: var(--gold); background: #faf0d0; }
+  .badge-alert { color: var(--red-dark); border-color: var(--red); background: #faeaea; }
+
+  .appliances-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .appliance-card {
+    background: var(--cream);
+    border: var(--outline);
+    padding: 16px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  .appliance-card::before {
+    content: '';
+    position: absolute;
+    top: 4px; left: 4px; right: -4px; bottom: -4px;
+    z-index: -1;
+  }
+
+  .appliance-card.red-shadow::before { background: var(--red-dark); }
+  .appliance-card.teal-shadow::before { background: var(--teal-dark); }
+  .appliance-card.gold-shadow::before { background: var(--gold-dark); }
+  .appliance-card.rose-shadow::before { background: var(--rose); }
+
+  .appliance-card:hover { transform: translate(-1px, -1px); }
+  .appliance-card:active { transform: translate(1px, 1px); }
+
+  .appliance-icon { font-size: 32px; margin-bottom: 8px; }
+
+  .appliance-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .appliance-freq {
+    font-size: 12px;
+    color: var(--ink-light);
+    opacity: 0.7;
+    margin-bottom: 8px;
+  }
+
+  .progress-bar {
+    height: 8px;
+    background: var(--cream-dark);
+    border: 1.5px solid var(--ink);
+    margin: 8px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    transition: width 0.3s;
+  }
+
+  .progress-ok { background: var(--green); }
+  .progress-warn { background: var(--gold); }
+  .progress-alert { background: var(--red); }
+
+  .appliance-days {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .btn-do {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .btn-do:hover { opacity: 0.85; }
+
+  .input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .styled-input {
+    flex: 1;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 15px;
+    padding: 10px 14px;
+    background: var(--cream);
+    border: var(--outline);
+    color: var(--ink);
+    outline: none;
+  }
+
+  .styled-input:focus { background: #fff; }
+
+  .styled-select {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    background: var(--cream);
+    border: var(--outline);
+    color: var(--ink);
+    outline: none;
+    cursor: pointer;
+  }
+
+  .btn-add {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    background: var(--teal);
+    color: var(--cream);
+    border: var(--outline);
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .btn-add::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px; right: -3px; bottom: -3px;
+    background: var(--teal-dark);
+    z-index: -1;
+  }
+
+  .btn-add:hover { opacity: 0.9; }
+
+  .list-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--cream);
+    border: var(--outline-thin);
+    border-bottom: none;
+    transition: background 0.15s;
+  }
+
+  .list-item:last-child { border-bottom: var(--outline-thin); }
+
+  .list-item.done {
+    opacity: 0.5;
+    background: var(--cream-dark);
+  }
+
+  .list-item.done .item-text { text-decoration: line-through; }
+
+  .item-check {
+    width: 22px;
+    height: 22px;
+    border: var(--outline-thin);
+    background: var(--cream);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+    color: var(--green);
+    font-weight: bold;
+  }
+
+  .item-check.checked {
+    background: var(--green);
+    color: var(--cream);
+  }
+
+  .item-text { flex: 1; font-size: 15px; }
+
+  .item-meta {
+    font-size: 12px;
+    color: var(--ink-light);
+    opacity: 0.6;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .btn-delete {
+    background: none;
+    border: 1.5px solid var(--red);
+    color: var(--red);
+    font-size: 14px;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-weight: bold;
+  }
+
+  .btn-delete:hover { background: var(--red); color: var(--cream); }
+
+  .person-tag {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    background: var(--teal);
+    color: var(--cream);
+    border: 1px solid var(--teal-dark);
+    flex-shrink: 0;
+  }
+
+  .person-tag.p2 { background: var(--rose); border-color: var(--rose-light); }
+  .person-tag.ambos { background: var(--gold-dark); border-color: var(--gold); }
+
+  .calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .cal-month {
+    font-family: 'Oswald', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+  }
+
+  .btn-nav {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    background: var(--cream);
+    border: var(--outline);
+    cursor: pointer;
+  }
+
+  .btn-nav:hover { background: var(--cream-dark); }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-top: var(--outline);
+    border-left: var(--outline);
+  }
+
+  .cal-header {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 8px 4px;
+    background: var(--ink);
+    color: var(--cream);
+    border-right: var(--outline);
+    border-bottom: var(--outline);
+  }
+
+  .cal-day {
+    min-height: 80px;
+    padding: 4px 6px;
+    border-right: var(--outline);
+    border-bottom: var(--outline);
+    cursor: pointer;
+    transition: background 0.1s;
+    position: relative;
+    background: var(--cream);
+  }
+
+  .cal-day:hover { background: #ffe8d0; }
+
+  .cal-day.empty { background: var(--cream-dark); cursor: default; }
+  .cal-day.empty:hover { background: var(--cream-dark); }
+
+  .cal-day.today { background: #fff8e8; }
+  .cal-day.today .day-num { background: var(--red); color: var(--cream); }
+
+  .cal-day.holiday { background: #faeaea; }
+
+  .day-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+  }
+
+  .day-holiday {
+    font-size: 9px;
+    color: var(--red-dark);
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin-bottom: 3px;
+  }
+
+  .day-event {
+    font-size: 9px;
+    padding: 1px 4px;
+    margin-bottom: 2px;
+    border-left: 2px solid var(--teal);
+    background: rgba(46,122,136,0.12);
+    color: var(--teal-dark);
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .day-event.type-turno { border-color: var(--gold); background: rgba(192,136,24,0.12); color: var(--gold-dark); }
+  .day-event.type-celebracion { border-color: var(--rose); background: rgba(184,80,112,0.12); color: var(--rose); }
+  .day-event.type-boda { border-color: var(--red); background: rgba(176,48,48,0.12); color: var(--red-dark); }
+  .day-event.type-otro { border-color: var(--green); background: rgba(58,106,74,0.12); color: var(--green); }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,16,8,0.6);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--cream);
+    border: var(--outline);
+    padding: 24px;
+    width: 100%;
+    max-width: 440px;
+    position: relative;
+  }
+
+  .modal::before {
+    content: '';
+    position: absolute;
+    top: 5px; left: 5px; right: -5px; bottom: -5px;
+    background: var(--ink);
+    z-index: -1;
+  }
+
+  .modal-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: var(--outline-thin);
+  }
+
+  .modal label {
+    display: block;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    margin-top: 12px;
+    color: var(--ink-light);
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .btn-primary {
+    flex: 1;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px;
+    background: var(--teal);
+    color: var(--cream);
+    border: var(--outline);
+    cursor: pointer;
+  }
+
+  .btn-primary:hover { background: var(--teal-dark); }
+
+  .btn-cancel {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    background: var(--cream);
+    color: var(--ink);
+    border: var(--outline);
+    cursor: pointer;
+  }
+
+  .btn-cancel:hover { background: var(--cream-dark); }
+
+  .legend {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid var(--ink);
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .two-col { grid-template-columns: 1fr; }
+    .cal-day { min-height: 60px; }
+    .cal-day { padding: 2px 3px; }
+    .day-num { font-size: 12px; width: 20px; height: 20px; }
+    nav button { padding: 10px 14px; font-size: 11px; }
+    .appliances-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .watermark {
+    text-align: center;
+    padding: 24px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.25;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-block">
+    <div class="logo-small">Av.</div>
+    <div class="logo-big">Juan Chabas 6</div>
+  </div>
+  <div class="header-subtitle">Gestión del hogar</div>
+</header>
+
+<nav>
+  <button class="active" onclick="showSection('aparatos')">🔄 Aparatos</button>
+  <button onclick="showSection('compra')">🛒 La Compra</button>
+  <button onclick="showSection('tareas')">📋 Tareas</button>
+  <button onclick="showSection('calendario')">📅 Calendario</button>
+</nav>
+
+<div id="aparatos" class="section active">
+  <div class="section-title">Aparatos del hogar <span>Próximas tareas</span></div>
+  <div class="appliances-grid" id="appliancesGrid"></div>
+</div>
+
+<div id="compra" class="section">
+  <div class="section-title">Lista de la compra</div>
+  <div class="input-row">
+    <input class="styled-input" id="compraInput" placeholder="Añadir artículo..." onkeydown="if(event.key==='Enter')addCompra()">
+    <select class="styled-select" id="compraCategoria">
+      <option value="Frescos">Frescos</option>
+      <option value="Lácteos">Lácteos</option>
+      <option value="Despensa">Despensa</option>
+      <option value="Limpieza">Limpieza</option>
+      <option value="Higiene">Higiene</option>
+      <option value="Bebidas">Bebidas</option>
+      <option value="Otros">Otros</option>
+    </select>
+    <button class="btn-add" onclick="addCompra()">+ Añadir</button>
+  </div>
+  <div id="compraList"></div>
+  <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+    <button class="btn-cancel" onclick="clearCompraChecked()">Borrar completados</button>
+    <button class="btn-cancel" onclick="clearAllCompra()">Borrar todo</button>
+  </div>
+</div>
+
+<div id="tareas" class="section">
+  <div class="section-title">Tareas del hogar</div>
+  <div class="input-row">
+    <input class="styled-input" id="tareaInput" placeholder="Nueva tarea pendiente..." onkeydown="if(event.key==='Enter')addTarea()">
+    <select class="styled-select" id="tareaPersona">
+      <option value="Yo">Yo</option>
+      <option value="Tu">Tú</option>
+      <option value="Ambos">Ambos</option>
+    </select>
+    <select class="styled-select" id="tareaPrioridad">
+      <option value="Normal">Normal</option>
+      <option value="Urgente">Urgente</option>
+    </select>
+    <button class="btn-add" onclick="addTarea()">+ Añadir</button>
+  </div>
+  <div id="tareaList"></div>
+</div>
+
+<div id="calendario" class="section">
+  <div class="section-title">Calendario conjunto</div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#faeaea;border-color:var(--red)"></div>Festivo</div>
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(192,136,24,0.2);border-color:var(--gold)"></div>Turno</div>
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(184,80,112,0.2);border-color:var(--rose)"></div>Celebración</div>
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(176,48,48,0.2);border-color:var(--red)"></div>Boda</div>
+    <div class="legend-item"><div class="legend-dot" style="background:rgba(58,106,74,0.2);border-color:var(--green)"></div>Otro</div>
+  </div>
+  <div class="calendar-nav">
+    <button class="btn-nav" onclick="changeMonth(-1)">◀ Anterior</button>
+    <div class="cal-month" id="calMonthLabel"></div>
+    <button class="btn-nav" onclick="changeMonth(1)">Siguiente ▶</button>
+  </div>
+  <div class="cal-grid" id="calGrid"></div>
+</div>
+
+<div class="watermark">Dibujado y coloreado en Av. Juan Chabas 6 · Murcia</div>
+
+<div class="modal-overlay" id="modalEvento">
+  <div class="modal">
+    <div class="modal-title" id="modalEventoTitle">Añadir evento</div>
+    <label>Título del evento</label>
+    <input class="styled-input" id="eventoTitulo" placeholder="Ej: Turno mañana, Boda de Ana..." style="width:100%">
+    <label>Tipo</label>
+    <select class="styled-select" id="eventoTipo" style="width:100%">
+      <option value="turno">Turno de trabajo</option>
+      <option value="celebracion">Celebración</option>
+      <option value="boda">Boda</option>
+      <option value="otro">Otro</option>
+    </select>
+    <label>Persona</label>
+    <select class="styled-select" id="eventoPersona" style="width:100%">
+      <option value="Yo">Yo</option>
+      <option value="Tu">Tú</option>
+      <option value="Ambos">Ambos</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modalEvento')">Cancelar</button>
+      <button class="btn-primary" onclick="saveEvento()">Guardar evento</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalVerEventos">
+  <div class="modal">
+    <div class="modal-title" id="verEventosTitle">Eventos</div>
+    <div id="verEventosList"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modalVerEventos')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalAppliance">
+  <div class="modal">
+    <div class="modal-title" id="modalAppTitle">Configurar</div>
+    <label>Nombre</label>
+    <input class="styled-input" id="appName" style="width:100%">
+    <label>Frecuencia (días)</label>
+    <input class="styled-input" type="number" id="appFreq" min="1" max="365" style="width:100%">
+    <label>Última vez hecho</label>
+    <input class="styled-input" type="date" id="appLastDone" style="width:100%">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modalAppliance')">Cancelar</button>
+      <button class="btn-primary" onclick="saveAppliance()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PERSONAS = {
+  'Yo': { cls: '' },
+  'Tu': { cls: 'p2' },
+  'Ambos': { cls: 'ambos' }
+};
+
+const HOLIDAYS_ES = {
+  '01-01': 'Año Nuevo',
+  '01-06': 'Reyes Magos',
+  '05-01': 'Día del Trabajo',
+  '08-15': 'Asunción',
+  '10-12': 'Fiesta Nacional',
+  '11-01': 'Todos los Santos',
+  '12-06': 'Constitución',
+  '12-08': 'Inmaculada',
+  '12-25': 'Navidad',
+};
+
+const HOLIDAYS_MU = {
+  '06-09': 'Día de Murcia',
+};
+
+const SEMANA_SANTA = {
+  2025: { '04-17': 'Jueves Santo', '04-18': 'Viernes Santo' },
+  2026: { '04-02': 'Jueves Santo', '04-03': 'Viernes Santo' },
+  2027: { '03-25': 'Jueves Santo', '03-26': 'Viernes Santo' },
+};
+
+function getHoliday(year, month, day) {
+  const key = String(month + 1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+  const ss = SEMANA_SANTA[year] || {};
+  const fullKey = year + '-' + key;
+  for (const [k, v] of Object.entries(ss)) {
+    if (k === key) return v;
+  }
+  return HOLIDAYS_MU[key] || HOLIDAYS_ES[key] || null;
+}
+
+function load(key, def) {
+  try { return JSON.parse(localStorage.getItem(key)) ?? def; } catch { return def; }
+}
+function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+let appliances = load('appliances', [
+  { id: 1, name: 'Lavadora', icon: '🫧', freq: 3, lastDone: null, color: 'red-shadow' },
+  { id: 2, name: 'Lavavajillas', icon: '🍽️', freq: 2, lastDone: null, color: 'teal-shadow' },
+  { id: 3, name: 'Arenero del gato', icon: '🐱', freq: 2, lastDone: null, color: 'gold-shadow' },
+  { id: 4, name: 'Aspiradora', icon: '🌀', freq: 7, lastDone: null, color: 'rose-shadow' },
+]);
+let compra = load('compra', []);
+let tareas = load('tareas', []);
+let eventos = load('eventos', {});
+
+let currentYear = new Date().getFullYear();
+let currentMonth = new Date().getMonth();
+let selectedDay = null;
+let editApplianceId = null;
+
+function daysSince(dateStr) {
+  if (!dateStr) return null;
+  const diff = Date.now() - new Date(dateStr).getTime();
+  return Math.floor(diff / 86400000);
+}
+
+function renderAppliances() {
+  const grid = document.getElementById('appliancesGrid');
+  grid.innerHTML = '';
+  appliances.forEach(ap => {
+    const days = daysSince(ap.lastDone);
+    const pct = days === null ? 0 : Math.min((days / ap.freq) * 100, 100);
+    let statusCls = 'progress-ok';
+    let badge = 'ok';
+    let msg = days === null ? 'Nunca hecho' : days === 0 ? 'Hecho hoy' : `Hace ${days} día${days !== 1 ? 's' : ''}`;
+    let daysLeft = days === null ? ap.freq : ap.freq - days;
+
+    if (pct >= 100) { statusCls = 'progress-alert'; badge = 'alert'; }
+    else if (pct >= 70) { statusCls = 'progress-warn'; badge = 'warn'; }
+
+    const badgeLabels = { ok: 'Al día', warn: 'Pronto', alert: '¡Pendiente!' };
+
+    grid.innerHTML += `
+      <div class="appliance-card ${ap.color}" onclick="markDone(${ap.id})">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div class="appliance-icon">${ap.icon}</div>
+          <span class="badge badge-${badge}">${badgeLabels[badge]}</span>
+        </div>
+        <div class="appliance-name">${ap.name}</div>
+        <div class="appliance-freq">Cada ${ap.freq} día${ap.freq !== 1 ? 's' : ''}</div>
+        <div class="progress-bar"><div class="progress-fill ${statusCls}" style="width:${pct}%"></div></div>
+        <div class="appliance-days">${msg} · ${daysLeft > 0 ? `quedan ${daysLeft}d` : 'toca hacerlo'}</div>
+        <button class="btn-do" onclick="event.stopPropagation();markDone(${ap.id})">✓ Marcar como hecho</button>
+        <button class="btn-cancel" style="width:100%;margin-top:4px;font-size:10px;letter-spacing:1px;padding:4px" onclick="event.stopPropagation();editAppliance(${ap.id})">⚙ Configurar</button>
+      </div>`;
+  });
+}
+
+function markDone(id) {
+  const ap = appliances.find(a => a.id === id);
+  if (!ap) return;
+  ap.lastDone = new Date().toISOString().split('T')[0];
+  save('appliances', appliances);
+  renderAppliances();
+}
+
+function editAppliance(id) {
+  editApplianceId = id;
+  const ap = appliances.find(a => a.id === id);
+  document.getElementById('modalAppTitle').textContent = 'Configurar: ' + ap.name;
+  document.getElementById('appName').value = ap.name;
+  document.getElementById('appFreq').value = ap.freq;
+  document.getElementById('appLastDone').value = ap.lastDone || '';
+  openModal('modalAppliance');
+}
+
+function saveAppliance() {
+  const ap = appliances.find(a => a.id === editApplianceId);
+  if (!ap) return;
+  ap.name = document.getElementById('appName').value.trim() || ap.name;
+  ap.freq = parseInt(document.getElementById('appFreq').value) || ap.freq;
+  ap.lastDone = document.getElementById('appLastDone').value || ap.lastDone;
+  save('appliances', appliances);
+  closeModal('modalAppliance');
+  renderAppliances();
+}
+
+function renderCompra() {
+  const list = document.getElementById('compraList');
+  if (!compra.length) { list.innerHTML = '<div style="padding:20px;text-align:center;opacity:0.5;font-family:Oswald,sans-serif;letter-spacing:2px;font-size:13px;text-transform:uppercase">Lista vacía · Añade artículos</div>'; return; }
+  const cats = {};
+  compra.forEach(item => {
+    if (!cats[item.cat]) cats[item.cat] = [];
+    cats[item.cat].push(item);
+  });
+  list.innerHTML = '';
+  Object.entries(cats).forEach(([cat, items]) => {
+    list.innerHTML += `<div class="card-title" style="margin-top:12px">${cat}</div>`;
+    items.forEach(item => {
+      list.innerHTML += `
+        <div class="list-item ${item.done ? 'done' : ''}" id="compra-${item.id}">
+          <div class="item-check ${item.done ? 'checked' : ''}" onclick="toggleCompra(${item.id})">${item.done ? '✓' : ''}</div>
+          <div class="item-text">${item.text}</div>
+          <button class="btn-delete" onclick="deleteCompra(${item.id})">✕</button>
+        </div>`;
+    });
+  });
+}
+
+function addCompra() {
+  const input = document.getElementById('compraInput');
+  const cat = document.getElementById('compraCategoria').value;
+  const text = input.value.trim();
+  if (!text) return;
+  compra.push({ id: Date.now(), text, cat, done: false });
+  save('compra', compra);
+  input.value = '';
+  renderCompra();
+}
+
+function toggleCompra(id) {
+  const item = compra.find(c => c.id === id);
+  if (item) { item.done = !item.done; save('compra', compra); renderCompra(); }
+}
+
+function deleteCompra(id) {
+  compra = compra.filter(c => c.id !== id);
+  save('compra', compra);
+  renderCompra();
+}
+
+function clearCompraChecked() {
+  compra = compra.filter(c => !c.done);
+  save('compra', compra);
+  renderCompra();
+}
+
+function clearAllCompra() {
+  if (confirm('¿Borrar toda la lista de la compra?')) {
+    compra = [];
+    save('compra', compra);
+    renderCompra();
+  }
+}
+
+function renderTareas() {
+  const list = document.getElementById('tareaList');
+  if (!tareas.length) { list.innerHTML = '<div style="padding:20px;text-align:center;opacity:0.5;font-family:Oswald,sans-serif;letter-spacing:2px;font-size:13px;text-transform:uppercase">Sin tareas pendientes · Genial!</div>'; return; }
+  const pendientes = tareas.filter(t => !t.done);
+  const hechas = tareas.filter(t => t.done);
+  let html = '';
+  if (pendientes.length) {
+    html += '<div class="card-title" style="margin-top:4px">Pendientes</div>';
+    pendientes.forEach(t => html += tareaRow(t));
+  }
+  if (hechas.length) {
+    html += '<div class="card-title" style="margin-top:16px;opacity:0.5">Completadas</div>';
+    hechas.forEach(t => html += tareaRow(t));
+  }
+  list.innerHTML = html;
+}
+
+function tareaRow(t) {
+  const pCls = PERSONAS[t.persona]?.cls || '';
+  return `
+    <div class="list-item ${t.done ? 'done' : ''}">
+      <div class="item-check ${t.done ? 'checked' : ''}" onclick="toggleTarea(${t.id})">${t.done ? '✓' : ''}</div>
+      <div class="item-text">${t.text}${t.urgente ? ' <span class="badge badge-alert" style="font-size:9px;padding:1px 5px">Urgente</span>' : ''}</div>
+      <span class="person-tag ${pCls}">${t.persona}</span>
+      <button class="btn-delete" onclick="deleteTarea(${t.id})">✕</button>
+    </div>`;
+}
+
+function addTarea() {
+  const input = document.getElementById('tareaInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const persona = document.getElementById('tareaPersona').value;
+  const prio = document.getElementById('tareaPrioridad').value;
+  tareas.unshift({ id: Date.now(), text, persona, urgente: prio === 'Urgente', done: false });
+  save('tareas', tareas);
+  input.value = '';
+  renderTareas();
+}
+
+function toggleTarea(id) {
+  const t = tareas.find(t => t.id === id);
+  if (t) { t.done = !t.done; save('tareas', tareas); renderTareas(); }
+}
+
+function deleteTarea(id) {
+  tareas = tareas.filter(t => t.id !== id);
+  save('tareas', tareas);
+  renderTareas();
+}
+
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DIAS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+
+function renderCalendar() {
+  document.getElementById('calMonthLabel').textContent = MESES[currentMonth] + ' ' + currentYear;
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+  DIAS.forEach(d => { grid.innerHTML += `<div class="cal-header">${d}</div>`; });
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const adjustedFirst = (firstDay + 6) % 7;
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const today = new Date();
+
+  for (let i = 0; i < adjustedFirst; i++) {
+    grid.innerHTML += '<div class="cal-day empty"></div>';
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const holiday = getHoliday(currentYear, currentMonth, d);
+    const isToday = today.getFullYear() === currentYear && today.getMonth() === currentMonth && today.getDate() === d;
+    const dateKey = currentYear + '-' + String(currentMonth + 1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const dayEvents = eventos[dateKey] || [];
+
+    let evHtml = dayEvents.map(ev => `
+      <div class="day-event type-${ev.tipo}" title="${ev.titulo}" onclick="event.stopPropagation();viewEvents('${dateKey}')">${ev.titulo}</div>
+    `).join('');
+
+    grid.innerHTML += `
+      <div class="cal-day ${holiday ? 'holiday' : ''} ${isToday ? 'today' : ''}" onclick="openAddEvento('${dateKey}', ${d})">
+        <div class="day-num">${d}</div>
+        ${holiday ? `<div class="day-holiday">${holiday}</div>` : ''}
+        ${evHtml}
+      </div>`;
+  }
+}
+
+function changeMonth(dir) {
+  currentMonth += dir;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  renderCalendar();
+}
+
+function openAddEvento(dateKey, day) {
+  selectedDay = dateKey;
+  document.getElementById('modalEventoTitle').textContent = 'Evento · ' + day + ' ' + MESES[currentMonth];
+  document.getElementById('eventoTitulo').value = '';
+  openModal('modalEvento');
+}
+
+function saveEvento() {
+  const titulo = document.getElementById('eventoTitulo').value.trim();
+  if (!titulo) return;
+  const tipo = document.getElementById('eventoTipo').value;
+  const persona = document.getElementById('eventoPersona').value;
+  if (!eventos[selectedDay]) eventos[selectedDay] = [];
+  eventos[selectedDay].push({ titulo, tipo, persona, id: Date.now() });
+  save('eventos', eventos);
+  closeModal('modalEvento');
+  renderCalendar();
+}
+
+function viewEvents(dateKey) {
+  const dayEvents = eventos[dateKey] || [];
+  const [y, m, d] = dateKey.split('-');
+  document.getElementById('verEventosTitle').textContent = `${parseInt(d)} ${MESES[parseInt(m)-1]} ${y}`;
+  let html = '';
+  if (!dayEvents.length) { html = '<div style="opacity:0.5;padding:8px">Sin eventos</div>'; }
+  dayEvents.forEach(ev => {
+    const pCls = PERSONAS[ev.persona]?.cls || '';
+    html += `
+      <div class="list-item" style="margin-bottom:4px">
+        <div class="item-text"><strong>${ev.titulo}</strong></div>
+        <span class="person-tag ${pCls}">${ev.persona}</span>
+        <button class="btn-delete" onclick="deleteEvento('${dateKey}', ${ev.id})">✕</button>
+      </div>`;
+  });
+  document.getElementById('verEventosList').innerHTML = html;
+  openModal('modalVerEventos');
+}
+
+function deleteEvento(dateKey, id) {
+  eventos[dateKey] = (eventos[dateKey] || []).filter(e => e.id !== id);
+  if (!eventos[dateKey].length) delete eventos[dateKey];
+  save('eventos', eventos);
+  renderCalendar();
+  viewEvents(dateKey);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelector(`nav button[onclick="showSection('${id}')"]`).classList.add('active');
+}
+
+renderAppliances();
+renderCompra();
+renderTareas();
+renderCalendar();
+</script>
+</body>
+</html>

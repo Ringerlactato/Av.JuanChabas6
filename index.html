@@ -663,6 +663,10 @@
     color: var(--ink);
     opacity: 0.25;
   }
+
+  .backup-actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+  .backup-status { min-height: 24px; overflow-wrap: anywhere; }
+  .backup-status.error { color: var(--red-dark); }
 </style>
 </head>
 <body>
@@ -680,6 +684,7 @@
   <button onclick="showSection('compra')">🛒 La Compra</button>
   <button onclick="showSection('tareas')">📋 Tareas</button>
   <button onclick="showSection('calendario')">📅 Calendario</button>
+  <button onclick="showSection('datos')">Datos y copias</button>
 </nav>
 
 <div id="aparatos" class="section active">
@@ -742,6 +747,21 @@
     <button class="btn-nav" onclick="changeMonth(1)">Siguiente ▶</button>
   </div>
   <div class="cal-grid" id="calGrid"></div>
+</div>
+
+<div id="datos" class="section">
+  <div class="section-title">Datos y copias</div>
+  <div class="card">
+    <div class="card-title">Copia de seguridad del hogar</div>
+    <p>Exporta los aparatos, la compra, las tareas y los eventos a un archivo JSON. Guarda el archivo para restaurarlo en otro navegador o dispositivo.</p>
+    <div class="backup-actions">
+      <button class="btn-add" onclick="exportBackup()">Exportar JSON</button>
+      <button class="btn-cancel" id="importBackupButton" onclick="document.getElementById('backupFile').click()">Importar JSON</button>
+      <input type="file" id="backupFile" accept=".json,application/json" hidden onchange="importBackup(this)">
+    </div>
+    <p>La importación sustituye todos los datos actuales. Exporta una copia antes de restaurar.</p>
+    <p id="backupStatus" class="backup-status" role="status" aria-live="polite"></p>
+  </div>
 </div>
 
 <div class="watermark">Dibujado y coloreado en Av. Juan Chabas 6 · Murcia</div>
@@ -856,6 +876,131 @@ let currentMonth = new Date().getMonth();
 let selectedDay = null;
 let editApplianceId = null;
 
+const BACKUP_KEYS = ['appliances', 'compra', 'tareas', 'eventos'];
+const BACKUP_APP = 'Av.JuanChabas6';
+
+function backupStatus(message, error = false) {
+  const status = document.getElementById('backupStatus');
+  status.textContent = message;
+  status.classList.toggle('error', error);
+}
+
+function validBackupDate(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(value + 'T00:00:00Z');
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+
+function validateBackup(backup) {
+  const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+  const text = value => typeof value === 'string' && value.trim().length > 0;
+  const id = value => Number.isSafeInteger(value) && value > 0;
+  const person = value => ['Yo', 'Tu', 'Ambos'].includes(value);
+  const fail = () => { throw new Error('El archivo no es una copia válida de esta aplicación.'); };
+  if (!object(backup) || backup.app !== BACKUP_APP || backup.version !== 1 || !object(backup.data)) fail();
+  const data = backup.data;
+  const array = (value, check) => {
+    if (!Array.isArray(value) || !value.every(item => object(item) && id(item.id) && check(item)) ||
+        new Set(value.map(item => item.id)).size !== value.length) fail();
+  };
+  array(data.appliances, ap => text(ap.name) && text(ap.icon) &&
+    Number.isSafeInteger(ap.freq) && ap.freq > 0 &&
+    (ap.lastDone === null || validBackupDate(ap.lastDone)) &&
+    ['red-shadow', 'teal-shadow', 'gold-shadow', 'rose-shadow'].includes(ap.color));
+  array(data.compra, item => text(item.text) &&
+    ['Frescos', 'Lácteos', 'Despensa', 'Limpieza', 'Higiene', 'Bebidas', 'Otros'].includes(item.cat) &&
+    typeof item.done === 'boolean');
+  array(data.tareas, item => text(item.text) && person(item.persona) &&
+    typeof item.done === 'boolean' && typeof item.urgente === 'boolean');
+  if (!object(data.eventos)) fail();
+  Object.entries(data.eventos).forEach(([date, events]) => {
+    if (!validBackupDate(date)) fail();
+    array(events, ev => text(ev.titulo) && person(ev.persona) &&
+      ['turno', 'celebracion', 'boda', 'otro'].includes(ev.tipo));
+  });
+  return data;
+}
+
+function exportBackup() {
+  let url;
+  let link;
+  try {
+    const backup = { app: BACKUP_APP, version: 1, exportedAt: new Date().toISOString(),
+      data: { appliances, compra, tareas, eventos } };
+    validateBackup(backup);
+    url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' }));
+    link = document.createElement('a');
+    link.href = url;
+    link.download = 'juan-chabas-6-copia-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(link);
+    link.click();
+    backupStatus('Copia preparada. Guarda el archivo descargado en un lugar seguro.');
+  } catch {
+    backupStatus('No se pudo exportar la copia. Comprueba los datos y vuelve a intentarlo.', true);
+  } finally {
+    if (link) link.remove();
+    if (url) setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+}
+
+async function importBackup(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const button = document.getElementById('importBackupButton');
+  button.disabled = true;
+  try {
+    if (file.size > 5 * 1024 * 1024) throw new Error('El archivo supera el límite de 5 MB.');
+    let backup;
+    try { backup = JSON.parse(await file.text()); }
+    catch { throw new Error('No se pudo leer el archivo como JSON.'); }
+    const data = validateBackup(backup);
+    const count = Object.values(data.eventos).reduce((total, events) => total + events.length, 0);
+    if (!confirm('¿Restaurar esta copia?\n' + data.appliances.length + ' aparatos, ' +
+      data.compra.length + ' artículos, ' + data.tareas.length + ' tareas y ' + count +
+      ' eventos.\nSe sustituirán TODOS los datos actuales. Esta acción no se puede deshacer sin otra copia.')) {
+      backupStatus('Importación cancelada. Los datos actuales se conservan.');
+      return;
+    }
+    // Keep the original storage values (including absent keys) for rollback.
+    const previous = BACKUP_KEYS.map(key => localStorage.getItem(key));
+    try {
+      BACKUP_KEYS.forEach(key => save(key, data[key]));
+    } catch {
+      let restored = true;
+      BACKUP_KEYS.forEach((key, index) => {
+        try {
+          if (localStorage.getItem(key) === previous[index]) return;
+          if (previous[index] === null) localStorage.removeItem(key);
+          else localStorage.setItem(key, previous[index]);
+        } catch { restored = false; }
+      });
+      throw new Error(restored ? 'No se pudo guardar la copia. Se han conservado los datos anteriores.' :
+        'Falló el almacenamiento y no se pudo recuperar toda la copia anterior. Exporta los datos actuales antes de recargar.');
+    }
+    ({ appliances, compra, tareas, eventos } = data);
+    selectedDay = null;
+    editApplianceId = null;
+    document.querySelectorAll('.modal-overlay').forEach(modal => modal.classList.remove('open'));
+    renderAppliances();
+    renderCompra();
+    renderTareas();
+    renderCalendar();
+    backupStatus('Copia restaurada correctamente. Todos los datos están actualizados.');
+  } catch (error) {
+    backupStatus(error.message || 'No se pudo importar la copia.', true);
+  } finally {
+    input.value = '';
+    button.disabled = false;
+  }
+}
+
+// User text may come from an imported file: render it as text, never as markup.
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]);
+}
+
 function daysSince(dateStr) {
   if (!dateStr) return null;
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -881,10 +1026,10 @@ function renderAppliances() {
     grid.innerHTML += `
       <div class="appliance-card ${ap.color}" onclick="markDone(${ap.id})">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div class="appliance-icon">${ap.icon}</div>
+          <div class="appliance-icon">${escapeHtml(ap.icon)}</div>
           <span class="badge badge-${badge}">${badgeLabels[badge]}</span>
         </div>
-        <div class="appliance-name">${ap.name}</div>
+        <div class="appliance-name">${escapeHtml(ap.name)}</div>
         <div class="appliance-freq">Cada ${ap.freq} día${ap.freq !== 1 ? 's' : ''}</div>
         <div class="progress-bar"><div class="progress-fill ${statusCls}" style="width:${pct}%"></div></div>
         <div class="appliance-days">${msg} · ${daysLeft > 0 ? `quedan ${daysLeft}d` : 'toca hacerlo'}</div>
@@ -938,7 +1083,7 @@ function renderCompra() {
       list.innerHTML += `
         <div class="list-item ${item.done ? 'done' : ''}" id="compra-${item.id}">
           <div class="item-check ${item.done ? 'checked' : ''}" onclick="toggleCompra(${item.id})">${item.done ? '✓' : ''}</div>
-          <div class="item-text">${item.text}</div>
+          <div class="item-text">${escapeHtml(item.text)}</div>
           <button class="btn-delete" onclick="deleteCompra(${item.id})">✕</button>
         </div>`;
     });
@@ -1003,7 +1148,7 @@ function tareaRow(t) {
   return `
     <div class="list-item ${t.done ? 'done' : ''}">
       <div class="item-check ${t.done ? 'checked' : ''}" onclick="toggleTarea(${t.id})">${t.done ? '✓' : ''}</div>
-      <div class="item-text">${t.text}${t.urgente ? ' <span class="badge badge-alert" style="font-size:9px;padding:1px 5px">Urgente</span>' : ''}</div>
+      <div class="item-text">${escapeHtml(t.text)}${t.urgente ? ' <span class="badge badge-alert" style="font-size:9px;padding:1px 5px">Urgente</span>' : ''}</div>
       <span class="person-tag ${pCls}">${t.persona}</span>
       <button class="btn-delete" onclick="deleteTarea(${t.id})">✕</button>
     </div>`;
@@ -1056,7 +1201,7 @@ function renderCalendar() {
     const dayEvents = eventos[dateKey] || [];
 
     let evHtml = dayEvents.map(ev => `
-      <div class="day-event type-${ev.tipo}" title="${ev.titulo}" onclick="event.stopPropagation();viewEvents('${dateKey}')">${ev.titulo}</div>
+      <div class="day-event type-${ev.tipo}" title="${escapeHtml(ev.titulo)}" onclick="event.stopPropagation();viewEvents('${dateKey}')">${escapeHtml(ev.titulo)}</div>
     `).join('');
 
     grid.innerHTML += `
@@ -1104,7 +1249,7 @@ function viewEvents(dateKey) {
     const pCls = PERSONAS[ev.persona]?.cls || '';
     html += `
       <div class="list-item" style="margin-bottom:4px">
-        <div class="item-text"><strong>${ev.titulo}</strong></div>
+        <div class="item-text"><strong>${escapeHtml(ev.titulo)}</strong></div>
         <span class="person-tag ${pCls}">${ev.persona}</span>
         <button class="btn-delete" onclick="deleteEvento('${dateKey}', ${ev.id})">✕</button>
       </div>`;
